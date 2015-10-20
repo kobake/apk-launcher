@@ -1,0 +1,2 @@
+# batファイルは改行コードCRLFでチェックアウトさせる #
+*.bat text eol=crlf
