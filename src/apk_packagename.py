@@ -6,7 +6,6 @@
 #
 import sys
 import os
-import commands
 import subprocess
 import re
 import command_util

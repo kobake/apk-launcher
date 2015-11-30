@@ -6,7 +6,6 @@
 #
 import sys
 import os
-import commands
 import subprocess
 import re
 import command_util
@@ -41,26 +40,26 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- #
 # apk informations
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- #
-print ""
-print "-------- apk informations --------"
+print("")
+print("-------- apk informations --------")
 
-print "apk_path = " + apk_path
+print("apk_path = " + apk_path)
 
 try:
-    package_name = subprocess.check_output('python apk_packagename.py "%s"' % apk_path, shell=True).rstrip()
-    print "package_name = " + package_name
+    package_name = subprocess.check_output('python apk_packagename.py "%s"' % apk_path, shell=True).decode("utf-8").rstrip()
+    print("package_name = " + package_name)
 
-    activity_name = subprocess.check_output('python apk_activityname.py "%s"' % (apk_path), shell=True).rstrip()
-    print "activity_name = " + activity_name
+    activity_name = subprocess.check_output('python apk_activityname.py "%s"' % (apk_path), shell=True).decode("utf-8").rstrip()
+    print("activity_name = " + activity_name)
 
 except SystemExit as e:
     sys.exit(1)
 
 except:
-    # stderr.write("Error: %s\n" % str(sys.exc_info()))
+    stderr.write("Error: %s\n" % str(sys.exc_info()))
     sys.exit(1)
 
-print ""
+print("")
 
 
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- #
@@ -71,23 +70,23 @@ try:
     # Install apk
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- #
     # Install
-    print "-------- install --------"
+    print("-------- install --------")
     result = command_util.do_command('adb install -r "%s"' % apk_path)
 
     # If installation failure
     if not result:
         # Uninstall
-        print "-------- uninstall --------"
+        print("-------- uninstall --------")
         command_util.do_command('adb uninstall %s' % package_name)
 
         # Re install
-        print "-------- re-install --------"
+        print("-------- re-install --------")
         command_util.do_command('adb install "%s"' % apk_path)
 
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- #
     # Execute apk
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- #
-    print "-------- start --------"
+    print("-------- start --------")
     command_util.do_command('adb shell am start -n %s/%s' % (package_name, activity_name))
 
 except SystemExit as e:

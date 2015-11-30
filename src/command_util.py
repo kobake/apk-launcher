@@ -3,7 +3,6 @@
 
 import sys
 import os
-import commands
 import subprocess
 import re
 from optparse import OptionParser
@@ -17,15 +16,15 @@ def do_command(cmd):
     cmd0 = cmd.split(" ")[0]
 
     # Execute command
-    print "> " + cmd
+    print("> " + cmd)
     try:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=(os.name != 'nt'))
-        output = p.communicate()[0]
+        output = p.communicate()[0].decode("utf-8")
         result = p.returncode
         if result == 127:
             stderr.write("Error: %s command not found.\n" % cmd0)
             sys.exit(1)
-        print output
+        print(output)
     except OSError as e:
         if e.errno == os.errno.ENOENT:
             stderr.write("Error: %s command not found.\n" % cmd0)
@@ -59,7 +58,7 @@ def do_command_silently(cmd):
 
     # Execute command
     try:
-        output = subprocess.check_output(cmd, shell=(os.name != 'nt'))
+        output = subprocess.check_output(cmd, shell=(os.name != 'nt')).decode("utf-8")
         if cmd0 == "aapt" and "It appears you do not have" in output:
             stderr.write(
                 ("Error: aapt error as follows.\n" +
